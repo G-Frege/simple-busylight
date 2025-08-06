@@ -1,0 +1,28 @@
+[project]
+name = "simple-busylight"
+version = "0.0.1"
+description = "A simple daemon and CLI for managing busylights"
+authors = [{ name = "Benjamin Voß", email = "simplebusylightdev@gmail.com" }]
+packages = [{ include = "simple_busylight", from = "src" }]
+license = "GPLv3"
+readme = "README.md"
+requires-python = "<3.15,>=3.11"
+
+[tool.poetry.dependencies] 
+"webcolors" = "*"
+"busylight-core" = "*"
+"argcomplete" = "*"
+
+[tool.poetry.scripts]
+busylight = "simple_busylight.busylight:main"
+
+[tool.poetry.group.build.dependencies]
+pyinstaller = "*"
+
+[tool.poetry.group.dev.dependencies]
+pyinstaller = "*"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0", "setuptools<81"]
+build-backend = "poetry.core.masonry.api"
+

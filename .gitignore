@@ -1,0 +1,5 @@
+/dist
+/build
+*.spec
+poetry.lock
+*__pycache__*
