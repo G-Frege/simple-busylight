@@ -1,0 +1,7 @@
+__pycache__/
+poetry.lock
+*.pyc
+build/
+dist/
+*.spec
+*.deb

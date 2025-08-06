@@ -1,0 +1,12 @@
+[Unit]
+Description=Simple Busylight Daemon
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/simple-busylightd
+Restart=always
+User=sblightd
+Group=sblightd
+
+[Install]
+WantedBy=multi-user.target

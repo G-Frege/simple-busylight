@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Install udev rules
+cp /usr/share/simple-busylight/99-busylight.rules /etc/udev/rules.d/99-busylight.rules
+udevadm control --reload
+udevadm trigger
+
+systemctl daemon-reexec
+systemctl daemon-reload
+systemctl enable simple-busylightd
+systemctl start simple-busylightd
