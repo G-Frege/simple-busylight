@@ -1,0 +1,1 @@
+SUBSYSTEM=="usb", ATTR{idVendor}=="27bb", ATTR{product}=="BUSYLIGHT", MODE="0666"

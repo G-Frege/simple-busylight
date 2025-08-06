@@ -1,0 +1,9 @@
+Package: simple-busylight
+Version: 0.0.1
+Section: utils
+Priority: optional
+Architecture: amd64
+Depends: libc6 (>= 2.27)
+Maintainer: Benjamin Voß <you@example.com>
+Description: A simple busylight server and CLI tool
+ Provides a systemd service and a CLI for controlling a busylight.
