@@ -1,0 +1,10 @@
+# aur/simple-busylightd.install
+post_install() {
+    echo "Reloading udev rules..."
+    udevadm control --reload-rules
+    udevadm trigger
+
+    echo "To enable the daemon:"
+    echo "  sudo systemctl daemon-reload"
+    echo "  sudo systemctl enable --now busylightd.service"
+}

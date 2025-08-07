@@ -1,0 +1,41 @@
+# Maintainer: Benjamin Voß <simplebusylightdev@gmail.com>
+pkgname=simple-busylight
+pkgver=0.0.1
+pkgrel=1
+pkgdesc="A simple daemon to control a USB Busylight device"
+arch=('x86_64')
+url="https://github.com/G-Frege/simple-busylight"
+license=('GPL3')
+depends=()
+makedepends=('python' 'poetry' 'git')
+install=simple-busylightd.install 
+source=("$pkgname-$pkgver.tar.gz")
+sha256sums=('SKIP')  # Replace with actual sha256 if you use a tarball
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+
+    poetry install --only main --no-root
+
+    # Build CLI binary
+    poetry run pyinstaller --onefile src/simple_busylight/cli.py --name busylightctl
+
+    # Build daemon binary
+    poetry run pyinstaller --onefile src/simple_busylight/daemon.py --name busylightd
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+
+    # Install CLI binary
+    install -Dm755 dist/busylightctl "$pkgdir/usr/bin/busylightctl"
+
+    # Install daemon binary (not in $PATH)
+    install -Dm755 dist/busylightd "$pkgdir/usr/lib/busylightd/busylightd"
+
+    # Install systemd service
+    install -Dm644 "$srcdir/busylightd.service" "$pkgdir/usr/lib/systemd/system/busylightd.service"
+
+    # Install udev rule
+    install -Dm644 "$srcdir/99-busylight.rules" "$pkgdir/usr/lib/udev/rules.d/99-busylight.rules"
+}

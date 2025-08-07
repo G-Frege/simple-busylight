@@ -13,8 +13,8 @@ requires-python = "<4.0,>=3.11"
 "busylight-core" = ">=0.15.0,<0.16.0"
 
 [tool.poetry.scripts]
-blight = "simple_busylight.cli:main"
-simple_busylightd = "simple_busylight.daemon:main"
+busylightctl = "simple_busylight.cli:main"
+busylightd = "simple_busylight.daemon:main"
 
 [tool.poetry.group.build.dependencies]
 pyinstaller = ">=3.11"
