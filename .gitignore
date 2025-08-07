@@ -5,3 +5,6 @@ build/
 dist/
 *.spec
 *.deb
+simple-busylight*.tar.gz
+/aur/src
+/aur/pkg

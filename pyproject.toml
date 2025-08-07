@@ -20,6 +20,6 @@ busylightd = "simple_busylight.daemon:main"
 pyinstaller = ">=3.11"
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
+requires = ["poetry-core>=2.0.0,<3.0.0", "setuptools<81"]
 build-backend = "poetry.core.masonry.api"
 
