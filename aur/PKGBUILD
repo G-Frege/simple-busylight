@@ -9,13 +9,13 @@ license=('GPL3')
 depends=()
 makedepends=('python' 'poetry' 'git')
 install=simple-busylightd.install 
-source=("$pkgname-$pkgver.tar.gz")
-sha256sums=('SKIP')  # Replace with actual sha256 if you use a tarball
+source=("https://github.com/G-Frege/simple-busylight/releases/download/v0.0.1/simple-busylight-0.0.1.tar.gz")
+sha256sums=('dfad3ecd0fd23d7845109272433190eb12c179c43f853c9f2252acbf0ed9bd57') 
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"
 
-    poetry install --only main --no-root
+    poetry install --with build
 
     # Build CLI binary
     poetry run pyinstaller --onefile src/simple_busylight/cli.py --name busylightctl
