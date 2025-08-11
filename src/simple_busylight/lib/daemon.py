@@ -28,7 +28,7 @@ def startup_workers():
   for light in lights:
     light_id = light.hardware.path.decode()
     worker = start_worker(light_id, command)
-    workers[light_id] = (worker, worker.pid, command)
+    workers[light_id] = (worker, light, command)
   return workers
 
 def get_control_msg ():
@@ -58,8 +58,11 @@ def get_control_msg ():
     print(f"ERROR: Invalid color format in {ctrl_file_path} - {e}")
     return None
 
-def apply():
-  print("DEBUG: CHANGING CONFIG")
+
+def apply(workers, control_message):
+  print(f"DEBUG: GOT NEW COLOR {control_message}")
+  for worker in workers:
+    print(f"DEBUG: KILLING WORKER {worker}")
   print("DEBUG: NOW I SHOULD CLEAR THE CONTROL FILE")
 
 def run():
@@ -69,7 +72,7 @@ def run():
     control_message = get_control_msg()
     startup_workers()
     if control_message:
-      apply()
+      apply(workers, control_message)
 
     time.sleep(int(os.environ.get('DAEMON_UPDATE_INTERVAL')))
 
