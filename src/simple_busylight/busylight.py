@@ -23,7 +23,7 @@ def run_daemon():
 
 def run_worker(token, light , command):
   print("DEBUG: RUNNING WORKER")
-  if token != os.environ.get("WORKER_TOKEN"):
+  if not token:
     syslog.syslog(syslog.LOG_ERR, 
       "Worker cannot be started directly by the user.")
     sys.exit(1)
@@ -50,10 +50,6 @@ def main():
   cli_parser = subparsers.add_parser("cli", help="Run in CLI mode")
   daemon_parser = subparsers.add_parser("daemon", help="Run in daemon mode")
   worker_parser = subparsers.add_parser("worker", help="Run in worker mode (internal)")
-  
-  worker_parser.add_argument("token", help="Internal token for worker authentication")
-  worker_parser.add_argument("light", help="Internal light_id for worker")
-  worker_parser.add_argument("command", help="Internal command for worker")
 
   args = parser.parse_args()
   print("DEBUG: Parsing done")
@@ -73,7 +69,10 @@ def main():
     run_daemon()
   elif args.mode == "worker":
     print("DEBUG: run worker")
-    run_worker(args.token, args.light, args.command)
+    token = os.environ.get("WORKER_TOKEN")
+    light = os.environ.get("WORKER_LIGHT")
+    command = os.environ.get("WORKER_COMMAND")
+    run_worker(token, light, command)
   else :
     print("DEBUG: run cli")
     run_cli()

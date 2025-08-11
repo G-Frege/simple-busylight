@@ -9,14 +9,15 @@ import webcolors
 
 def start_worker(light_id, command):
   worker_token = secrets.token_hex(16)
-  os.environ["WORKER_TOKEN"] = worker_token
+  env = os.environ.copy()
+  env["WORKER_TOKEN"] = worker_token
+  env["WORKER_LIGHT"] = light_id
+  env["WORKER_COMMAND"] = command
   worker = subprocess.Popen([
   sys.argv[0],
-    "worker",
-    worker_token,
-    light_id,
-    command
-  ])
+    "worker"
+  ],
+  env=env )
   return worker
 
 def startup_workers():
