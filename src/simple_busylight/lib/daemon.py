@@ -20,9 +20,10 @@ def start_worker(light_id, command):
   env=env )
   return worker
 
-def startup_workers():
+def startup_workers(command=None):
   print("STARTING WORKERS")
-  command = os.environ.get('DEFAULT_COLOR')
+  if command is None:
+    command = os.environ.get('DEFAULT_COLOR')
   lights = KuandoLights.all_lights()
   workers = {}
   for light in lights:
@@ -31,20 +32,25 @@ def startup_workers():
     workers[light_id] = (worker, light, command)
   return workers
 
+def clear_ctrl_msg ():
+  try:
+    with open(ctrl_file_path, "w") as file:
+        pass
+    print(f"Cleared contents of {ctrl_file_path}")
+  except FileNotFoundError:
+    print(f"File not found: {ctrl_file_path}")
+  except PermissionError:
+    print(f"Permission denied: {ctrl_file_path}")
+  except Exception as e:
+    print(f"An error occurred: {e}")
+
 def get_control_msg ():
   ctrl_file_path = os.environ.get('COLOR_FILE')
   try:
     with open(ctrl_file_path, "r") as f:
       ctrl_msg = f.read().strip().lower()
-      if ctrl_msg.startswith("#!"):
-        print(f"DEBUG: Custom command detected: {ctrl_msg}")
-        return ("custom_command", ctrl_msg[2:].strip())  # return type + command text
-      if ctrl_msg.startswith('#') and len(ctrl_msg) in (7, 4):
-        rgb = webcolors.hex_to_rgb(ctrl_msg)
-        return (rgb.red, rgb.green, rgb.blue)
-      if ctrl_msg.isalpha():
-        rgb = webcolors.name_to_rgb(ctrl_msg)
-        return (rgb.red, rgb.green, rgb.blue)
+      clear_ctrl_msg(ctrl_file_path)
+      return ctrl_msg
       if not ctrl_msg:
         print(f"DEBUG: No Command detected")
         return None
@@ -59,21 +65,15 @@ def get_control_msg ():
     return None
 
 
-def apply(workers, control_message):
-  print(f"DEBUG: GOT NEW COLOR {control_message}")
-  for worker in workers:
-    print(f"DEBUG: KILLING WORKER {worker}")
-  print("DEBUG: NOW I SHOULD CLEAR THE CONTROL FILE")
-
 def run():
   workers = startup_workers()
-  control_message = ""
   while True:
-    control_message = get_control_msg()
-    startup_workers()
+    command = get_control_msg()
+    startup_workers(command)
     if control_message:
-      apply(workers, control_message)
-
+      for worker in workers:
+            worker.kill()
+            start_worker(worker.value())
     time.sleep(int(os.environ.get('DAEMON_UPDATE_INTERVAL')))
 
 
